@@ -1,0 +1,311 @@
+:PROPERTIES:
+:ID:       b65ffb87-acbe-4da7-aa94-df6e4714991a
+:END:
+#+title: Talk - Saama Meetup May 2025 - KAN
+
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_HLEVEL: 10
+
+* How a neural network works?
+- Let have volunteers act as neurons and simulate how a neural network works
+
+The problem for the volunteer network to model is price prediction for houses
+- Input Features ::
+  - House size
+  - Centrality
+  - Crime rate
+  - Price trend
+
+
+Dataset
+| Property | House Size (sq.ft) | Centrality (km) | Crime Rate (/1000) | Price Trend (%) |
+|----------+--------------------+-----------------+--------------------+-----------------|
+| A        |               1000 |               2 |                 50 |              10 |
+| B        |                800 |               8 |                175 |               5 |
+| C        |               1200 |               1 |                 75 |              11 |
+| D        |                500 |               6 |                 25 |               7 |
+| E        |               1500 |               3 |                150 |               3 |
+
+
+- Network size ::
+  - input = 3
+  - hidden = 4
+    Each specialist scores based on particular features and give a score
+    - Child care analyst considers =crime rate=
+    - Civil Engineer considers =house size=
+    - Lifestyle analyst considers =centrality= and =crime rate=
+    - Market Specialist considers =crime rate= and =price trend=
+  - output = 1
+    - price by summing the scores and multiplying by a price factor
+* Activities
+** First experiment
+Verbal assessment based on best guesses.
+
+** Recommend a number based on binned tabled (histogram)
+Each volunteer is given a sheet of paper of instruction on what score value to shout out in a tabular form.
+
+For example for centrality feature, the following tables means highly accessible houses get higher score and should be valued more.
+| Input | Output |
+| 500m  |     10 |
+| 1km   |      8 |
+| 5km   |      4 |
+| 10km  |      1 |
+
+- Child care analyst considers =crime rate=
+- Civil Engineer considers =house size=
+- Lifestyle analyst considers =centrality=
+- Market Specialist considers and =price trend=
+
+** Multiply and Sum
+Lifestyle and market analysts now consider more than one factor
+- Lifestyle analyst considers =centrality= and =crime rate=
+- Market Specialist considers =crime rate= and =price trend=
+
+** Multiply and Sum + Activation
+
+Lets add activation functions.
+Activation function for
+ - Market analyst = max(threshold, input=function(crime-rate, price-trend))
+ - Child care = negative(crime-rate)
+ - Civil engineer = identity(house-size)
+ - Lifestyle = TODO
+
+ - Network size ::
+   - input = 3
+   - hidden = 4
+     Each specialist scores based on particular features and give a score
+     - Child care analyst considers =crime rate=
+     - Civil Engineer considers =house size=
+     - Lifestyle analyst considers =centrality= and =crime rate=
+     - Market Specialist considers =crime rate= and =price trend=
+   - output = 1
+     - price by summing the scores and multiplying by a price factor
+
+* A network of specialists
+** Observations(Dataset )
+:PROPERTIES:
+:TABLE_EXPORT_FILE: /tmp/raw.csv
+:TABLE_EXPORT_FORMAT: orgtbl-to-csv
+:END:
+
+#+NAME: raw-observations
+| Property | House Size (sq.ft) | Centrality (km) | Crime Rate (/1000) | Price Trend (%) |
+| A        |               1000 |               2 |                 50 |              10 |
+| B        |                800 |               8 |                175 |               5 |
+| C        |               1200 |               1 |                 75 |              11 |
+| D        |                500 |               6 |                 25 |               7 |
+| E        |               1500 |               3 |                150 |               3 |
+
+#+BEGIN_SRC python :tangle /tmp/raw2scaled.py  :results output :exports none
+  import pandas as pd
+  df = pd.read_csv('/tmp/raw.csv')
+  numeric_cols = df.columns[1:]
+  max_vals = df[numeric_cols].astype(float).max()
+  scaled = df.copy()
+
+  for col in numeric_cols:
+      scaled[col] = df[col].astype(float) / max_vals[col]
+
+  col_rename = {
+      'House Size (sq.ft)': 'Size',
+      'Centrality (km)': 'Centrality',
+      'Crime Rate (/1000)': 'Crime',
+      'Price Trend (%)': 'Trend'
+  }
+  scaled.rename(columns=col_rename, inplace=True)
+  scaled.to_csv('/tmp/scaled.csv', float_format='%0.3f', index=False)
+#+END_SRC
+
+** Raw and Scaled Dataset (Max-based Scaling)
+#+NAME: scaled-observations
+| Property |  Size | Centrality | Crime | Trend |
+| A        | 0.667 |      0.250 | 0.286 | 0.909 |
+| B        | 0.533 |      1.000 | 1.000 | 0.455 |
+| C        | 0.800 |      0.125 | 0.429 | 1.000 |
+| D        | 0.333 |      0.750 | 0.143 | 0.636 |
+| E        | 1.000 |      0.375 | 0.857 | 0.273 |
+
+
+** First simulation
+- Child Care: \(10 \times (1 - crime)\)
+- Engineer: \(50 \times size\)
+- Lifestyle: \(5 \times centrality\)
+- Market Specialist: \(8 \times trend\)
+
+#+begin_src python  :exports none
+  import pandas as pd
+  df = pd.read_csv("/tmp/scaled.csv")
+  df["Child Care"] = 10 * (1 - df["Crime"])
+  df["Engineer"] = 50 * df["Size"]
+  df["Lifestyle"] = 2 * df["Centrality"]
+  df["Market Specialist"] = 8 * df["Trend"]
+
+  df["Sum"] = df[["Child Care", "Engineer", "Lifestyle", "Market Specialist"]].sum(axis=1)
+  df["Price"] = df["Sum"].apply(lambda x: f"₹{int(round(x * 10))}L")
+
+  result = df[["Property", "Child Care", "Engineer", "Lifestyle", "Market Specialist", "Sum", "Price"]]
+  output_path = "/tmp/first-sim.csv"
+  result.to_csv(output_path, index=False, float_format='%0.2f')
+#+end_src
+
+| Property | Child Care | Engineer | Lifestyle | Market Specialist |   Sum | Price |
+| A        |       7.14 |    33.35 |      0.50 |           7.27 | 48.26 | ₹483L |
+| B        |       0.00 |    26.65 |      2.00 |           3.64 | 32.29 | ₹323L |
+| C        |       5.71 |    40.00 |      0.25 |           8.00 | 53.96 | ₹540L |
+| D        |       8.57 |    16.65 |      1.50 |           5.09 | 31.81 | ₹318L |
+| E        |       1.43 |    50.00 |      0.75 |           2.18 | 54.36 | ₹544L |
+
+** Second simulation
+- Child Care: \(10 \times (1 - crime)\)
+- Engineer: \(50 \times size\)
+- Lifestyle: \(5 \times centrality\)
+- /Market Specialist/: \(5 \times (1 - crime) + 8 \times trend)\)
+
+#+begin_src python  :exports none
+  import pandas as pd
+  df = pd.read_csv("/tmp/scaled.csv")
+
+  df["Child Care"] = 10 * (1 - df["Crime"])
+  df["Engineer"] = 50 * df["Size"]
+  df["Lifestyle"] = 5 * df["Centrality"]
+  df["Market Specialist"] = 5 * (1 - df["Crime"]) + 8 * df["Trend"]
+
+  df["Sum"] = df[["Child Care", "Engineer", "Lifestyle", "Market Specialist"]].sum(axis=1)
+  df["Price"] = df["Sum"].apply(lambda x: f"₹{int(round(x * 10))}L")
+
+  result = df[["Property", "Child Care", "Engineer", "Lifestyle", "Market Specialist", "Sum", "Price"]]
+  output_path = "/tmp/second-sim.csv"
+  result.to_csv(output_path, index=False, float_format='%0.2f')
+#+end_src
+
+| Property | Child Care | Engineer | Lifestyle | Market Specialist |   Sum | Price |
+| A        |       7.14 |    33.35 |      1.25 |          10.84 | 52.58 | ₹526L |
+| B        |       0.00 |    26.65 |      5.00 |           3.64 | 35.29 | ₹353L |
+| C        |       5.71 |    40.00 |      0.62 |          10.86 | 57.19 | ₹572L |
+| D        |       8.57 |    16.65 |      3.75 |           9.37 | 38.34 | ₹383L |
+| E        |       1.43 |    50.00 |      1.88 |           2.90 | 56.20 | ₹562L |
+
+** Third simulation
+- Child Care: \(10 \times (1 - crime)\)
+- Engineer: \(50 \times size\)
+- /Lifestyle/: \( lognormal (5 \times centrality)\)
+- /Market Specialist/: \(max(50, 5 \times (1 - crime) + 8 \times trend)\)
+
+#+begin_src python  :exports none
+  import pandas as pd
+  import numpy as np
+  df = pd.read_csv("/tmp/scaled.csv")
+
+  df["Child Care"] = 10 * (1 - df["Crime"])
+  df["Engineer"] = 50 * df["Size"]
+  df["Market Specialist"] = np.maximum(50, 5 * (1 - df["Crime"]) + 8 * df["Trend"])
+
+  mu = 0
+  sigma = 1
+  x = 5 * df["Centrality"]
+  df["Lifestyle"] = (1 / (x * sigma * np.sqrt(2 * np.pi))) * np.exp(- (np.log(x) - mu)**2 / (2 * sigma**2))
+
+  df["Sum"] = df[["Child Care", "Engineer", "Lifestyle", "Market Specialist"]].sum(axis=1)
+  df["Price"] = df["Sum"].apply(lambda x: f"₹{int(round(x * 10))}L")
+
+  result = df[["Property", "Child Care", "Engineer", "Lifestyle", "Market Specialist", "Sum", "Price"]]
+  output_path = "/tmp/third-sim.csv"
+  result.to_csv(output_path, index=False, float_format='%0.2f')
+#+end_src
+
+| Property | Child Care | Engineer | Lifestyle | Market Specialist |    Sum | Price  |
+| A        |       7.14 |    33.35 |      0.31 |          50.00 |  90.80 | ₹908L  |
+| B        |       0.00 |    26.65 |      0.02 |          50.00 |  76.67 | ₹767L  |
+| C        |       5.71 |    40.00 |      0.57 |          50.00 |  96.28 | ₹963L  |
+| D        |       8.57 |    16.65 |      0.04 |          50.00 |  75.26 | ₹753L  |
+| E        |       1.43 |    50.00 |      0.17 |          50.00 | 101.60 | ₹1016L |
+
+* Activatyion plots
+** Lifestyle
+  #+begin_src python  :exports results :results file
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    mu = 0
+    sigma = 0.5
+    x = np.linspace(0.01, 5, 500)
+    pdf = (1 / (x * sigma * np.sqrt(2 * np.pi))) * np.exp(- (np.log(x) - mu)**2 / (2 * sigma**2))
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, pdf, linewidth=2)
+    plt.title('Log-Normal Distribution (μ=0, σ=0.5)')
+    plt.xlabel('x')
+    plt.ylabel('Probability Density')
+    plt.grid(True)
+    plt.tight_layout()
+
+    plt.savefig('img/lifestyle-activation-function.png')
+    return 'img/lifestyle-activation-function.png'
+#+end_src
+
+** Market heatmap
+ #+begin_src python  :exports results :results file
+   import numpy as np
+   import matplotlib.pyplot as plt
+
+   # Create grid for crime and trend
+   crime_vals = np.linspace(1, 100, 100)
+   trend_vals = np.linspace(1, 100, 100)
+   crime_grid, trend_grid = np.meshgrid(crime_vals, trend_vals)
+
+   # Market Specialist function
+   z = np.maximum(50, 5 * (1 - crime_grid) + 8 * trend_grid)
+
+   # Plotting heatmap
+   plt.figure(figsize=(8, 6))
+   plt.imshow(z, extent=[1, 100, 1, 100], origin='lower', aspect='auto', cmap='viridis')
+   plt.colorbar(label='Market Specialist Score')
+   plt.title('Heatmap of Market Specialist Output\nmax(5, -1 x crime + 5 x trend)')
+   plt.xlabel('Crime Rate')
+   plt.ylabel('Price Trend')
+   plt.tight_layout()
+
+
+   plt.savefig('img/market-activation-function.png')
+   return 'img/market-activation-function.png'
+  #+end_src
+
+  #+RESULTS:
+  [[file:img/market-activation-function.png]]
+
+** Market 3d plot
+  #+begin_src python  :exports results :results file
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    from mpl_toolkits.mplot3d import Axes3D
+
+    # Create grid for crime and trend
+    crime_vals = np.linspace(1, 100, 100)
+    trend_vals = np.linspace(1, 100, 100)
+    crime_grid, trend_grid = np.meshgrid(crime_vals, trend_vals)
+
+    # Market Specialist function
+    z = np.maximum(50, 5 * (1 - crime_grid) + 8 * trend_grid)
+
+    # Create 3D plot
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the surface
+    ax.plot_surface(crime_grid, trend_grid, z, cmap='viridis', edgecolor='none', alpha=0.75)
+    ax.set_title('3D Surface Plot of Market Specialist Output')
+    ax.set_xlabel('Crime Rate')
+    ax.set_ylabel('Price Trend')
+    ax.set_zlabel('Score')
+
+    plt.tight_layout()
+    plt.savefig('img/market-activation-function-3d.png')
+    return 'img/market-activation-function-3d.png'
+  #+end_src
+
+  #+RESULTS:
+  [[file:img/market-activation-function-3d.png]]
+
+* Interpretability
+https://github.com/KindXiaoming/pykan/blob/master/tutorials/Interp/Interp_1_Hello%2C%20MultKAN.ipynb
