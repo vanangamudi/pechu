@@ -5,17 +5,19 @@
 
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
 #+REVEAL_HLEVEL: 10
+#+REVEAL_PLUGINS: (highlight)
+#+REVEAL_INIT_OPTIONS: width:1200, height:800, margin: 0.1, minScale:0.2, maxScale:2.5, transition:'edges'
+
 
 * How a neural network works?
 - Let have volunteers act as neurons and simulate how a neural network works
 
 The problem for the volunteer network to model is price prediction for houses
-- Input Features ::
+** Input Features ::
   - House size
   - Centrality
   - Crime rate
   - Price trend
-
 
 Dataset
 | Property | House Size (sq.ft) | Centrality (km) | Crime Rate (/1000) | Price Trend (%) |
@@ -26,8 +28,7 @@ Dataset
 | D        |                500 |               6 |                 25 |               7 |
 | E        |               1500 |               3 |                150 |               3 |
 
-
-- Network size ::
+** Network Structure
   - input = 3
   - hidden = 4
     Each specialist scores based on particular features and give a score
@@ -81,7 +82,7 @@ Activation function for
    - output = 1
      - price by summing the scores and multiplying by a price factor
 
-* A network of specialists
+* A Network of Specialists
 ** Observations(Dataset )
 :PROPERTIES:
 :TABLE_EXPORT_FILE: /tmp/raw.csv
@@ -129,7 +130,7 @@ Activation function for
 ** First simulation
 - Child Care: \(10 \times (1 - crime)\)
 - Engineer: \(50 \times size\)
-- Lifestyle: \(5 \times centrality\)
+- Lifestyle: \(-5 \times centrality\)
 - Market Specialist: \(8 \times trend\)
 
 #+begin_src python  :exports none
@@ -143,7 +144,8 @@ Activation function for
   df["Sum"] = df[["Child Care", "Engineer", "Lifestyle", "Market Specialist"]].sum(axis=1)
   df["Price"] = df["Sum"].apply(lambda x: f"₹{int(round(x * 10))}L")
 
-  result = df[["Property", "Child Care", "Engineer", "Lifestyle", "Market Specialist", "Sum", "Price"]]
+  result = df[["Property", "Child Care", "Engineer",
+               "Lifestyle", "Market Specialist", "Sum", "Price"]]
   output_path = "/tmp/first-sim.csv"
   result.to_csv(output_path, index=False, float_format='%0.2f')
 #+end_src
@@ -155,10 +157,13 @@ Activation function for
 | D        |       8.57 |    16.65 |      1.50 |           5.09 | 31.81 | ₹318L |
 | E        |       1.43 |    50.00 |      0.75 |           2.18 | 54.36 | ₹544L |
 
+*** What if we draw the network?
+[[file:img/first-network.png]]
+
 ** Second simulation
 - Child Care: \(10 \times (1 - crime)\)
 - Engineer: \(50 \times size\)
-- Lifestyle: \(5 \times centrality\)
+- Lifestyle: \(-5 \times centrality\)
 - /Market Specialist/: \(5 \times (1 - crime) + 8 \times trend)\)
 
 #+begin_src python  :exports none
@@ -173,7 +178,8 @@ Activation function for
   df["Sum"] = df[["Child Care", "Engineer", "Lifestyle", "Market Specialist"]].sum(axis=1)
   df["Price"] = df["Sum"].apply(lambda x: f"₹{int(round(x * 10))}L")
 
-  result = df[["Property", "Child Care", "Engineer", "Lifestyle", "Market Specialist", "Sum", "Price"]]
+  result = df[["Property", "Child Care", "Engineer",
+               "Lifestyle", "Market Specialist", "Sum", "Price"]]
   output_path = "/tmp/second-sim.csv"
   result.to_csv(output_path, index=False, float_format='%0.2f')
 #+end_src
@@ -185,10 +191,14 @@ Activation function for
 | D        |       8.57 |    16.65 |      3.75 |           9.37 | 38.34 | ₹383L |
 | E        |       1.43 |    50.00 |      1.88 |           2.90 | 56.20 | ₹562L |
 
+*** What if we draw the network?
+
+[[file:img/second-network.png]]
+
 ** Third simulation
 - Child Care: \(10 \times (1 - crime)\)
 - Engineer: \(50 \times size\)
-- /Lifestyle/: \( lognormal (5 \times centrality)\)
+- /Lifestyle/: \( lognormal (5 \times centrality)\)  *Notice the 5 is not -5 anymore*
 - /Market Specialist/: \(max(50, 5 \times (1 - crime) + 8 \times trend)\)
 
 #+begin_src python  :exports none
@@ -208,20 +218,21 @@ Activation function for
   df["Sum"] = df[["Child Care", "Engineer", "Lifestyle", "Market Specialist"]].sum(axis=1)
   df["Price"] = df["Sum"].apply(lambda x: f"₹{int(round(x * 10))}L")
 
-  result = df[["Property", "Child Care", "Engineer", "Lifestyle", "Market Specialist", "Sum", "Price"]]
+  result = df[["Property", "Child Care", "Engineer",
+               "Lifestyle", "Market Specialist", "Sum", "Price"]]
   output_path = "/tmp/third-sim.csv"
   result.to_csv(output_path, index=False, float_format='%0.2f')
 #+end_src
 
 | Property | Child Care | Engineer | Lifestyle | Market Specialist |    Sum | Price  |
-| A        |       7.14 |    33.35 |      0.31 |          50.00 |  90.80 | ₹908L  |
-| B        |       0.00 |    26.65 |      0.02 |          50.00 |  76.67 | ₹767L  |
-| C        |       5.71 |    40.00 |      0.57 |          50.00 |  96.28 | ₹963L  |
-| D        |       8.57 |    16.65 |      0.04 |          50.00 |  75.26 | ₹753L  |
-| E        |       1.43 |    50.00 |      0.17 |          50.00 | 101.60 | ₹1016L |
+| A        |       7.14 |    33.35 |      0.31 |             50.00 |  90.80 | ₹908L  |
+| B        |       0.00 |    26.65 |      0.02 |             50.00 |  76.67 | ₹767L  |
+| C        |       5.71 |    40.00 |      0.57 |             50.00 |  96.28 | ₹963L  |
+| D        |       8.57 |    16.65 |      0.04 |             50.00 |  75.26 | ₹753L  |
+| E        |       1.43 |    50.00 |      0.17 |             50.00 | 101.60 | ₹1016L |
 
-* Activatyion plots
-** Lifestyle
+* Activation plots
+** Lifestyle - backward slanting straight line
   #+begin_src python  :exports results :results file
     import numpy as np
     import matplotlib.pyplot as plt
@@ -239,9 +250,42 @@ Activation function for
     plt.grid(True)
     plt.tight_layout()
 
-    plt.savefig('img/lifestyle-activation-function.png')
-    return 'img/lifestyle-activation-function.png'
+    plt.savefig('img/lifestyle-activation-plot.png')
+    return 'img/lifestyle-activation-plot.png'
 #+end_src
+
+#+RESULTS:
+[[file:img/lifestyle-activation-plot.png]]
+
+** Lifestyle - positively skewed curve
+  #+begin_src python  :exports results :results file
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    mu = 0
+    sigma = 0.5
+    x = np.linspace(0.01, 5, 500)
+    pdf = (1 / (x * sigma * np.sqrt(2 * np.pi))) * np.exp(- (np.log(x) - mu)**2 / (2 * sigma**2))
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(x, pdf, linewidth=2, label='log-normal (centrality)')
+    plt.plot(x, - x/x[-1] + 1, linewidth=2, label='-5 x centrality')
+    plt.title('Log-Normal Distribution (μ=0, σ=0.5)')
+    plt.xlabel('x')
+    plt.ylabel('Probability Density')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.legend()
+
+    plt.savefig('img/lifestyle-activation2-plot.png')
+    return 'img/lifestyle-activation2-plot.png'
+#+end_src
+
+#+RESULTS:
+[[file:img/lifestyle-activation2-plot.png]]
+#+begin_notes
+Note that curvy =log-normal= activation function is not giving as much as importance to the very busy city centre and the slanting straight line
+#+end_notes
 
 ** Market heatmap
  #+begin_src python  :exports results :results file
@@ -266,12 +310,12 @@ Activation function for
    plt.tight_layout()
 
 
-   plt.savefig('img/market-activation-function.png')
-   return 'img/market-activation-function.png'
+   plt.savefig('img/market-activation-plot.png')
+   return 'img/market-activation-plot.png'
   #+end_src
 
   #+RESULTS:
-  [[file:img/market-activation-function.png]]
+  [[file:img/market-activation-plot.png]]
 
 ** Market 3d plot
   #+begin_src python  :exports results :results file
@@ -300,12 +344,34 @@ Activation function for
     ax.set_zlabel('Score')
 
     plt.tight_layout()
-    plt.savefig('img/market-activation-function-3d.png')
-    return 'img/market-activation-function-3d.png'
+    plt.savefig('img/market-activation-plot-3d.png')
+    return 'img/market-activation-plot-3d.png'
   #+end_src
 
   #+RESULTS:
-  [[file:img/market-activation-function-3d.png]]
+  [[file:img/market-activation-plot-3d.png]]
 
+* What have we learned (1)
+- Each neuron learns a =smooth= function, specified by the =weights= and the =activation function=
+* What have we learned (2)
+- The =input= is multiplied by =weight of the connection= determines the influence on the output
+* What have we learned (3)
+- But in the end =activation function= is the one that decides
+  - /Lifestyle/: \( lognormal (5 \times centrality)\)
+  - Eventhough the input is amplified by this multiplication the activation function is the one decides larger value means the house is too remote to be accessible
+     [[file:img/lifestyle-activation-plot.png]]
+
+* What if we can have a better? (1)
+- more sophisticated squiggly activation function?
+  [[file:img/bernstein.png]]
+
+* What if we can do even better? (2)
+- Combine the curves into complex shapes
+  [[file:img/bspline.png]]
+* Enter KAN
+[[file:img/title-image.png]]
+* What is KAN?
+What if the activation is moved onto the dendrites in the network instead of neurons.
+[[file:img/mlp-kan-comparison.png]]
 * Interpretability
 https://github.com/KindXiaoming/pykan/blob/master/tutorials/Interp/Interp_1_Hello%2C%20MultKAN.ipynb

@@ -13,7 +13,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/moon.css" id="theme"/>
 
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/plugin/highlight/zenburn.css"/>
 <!-- If the query includes 'print-pdf', include the PDF print sheet -->
 <script>
     if( window.location.search.match( /print-pdf/gi ) ) {
@@ -30,46 +30,68 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide"><h1 class="title">Talk - Saama Meetup May 2025 - KAN</h1><p class="subtitle"></p>
-<h2 class="author">vanangamudi</h2><p class="date">Created: 2025-05-30 Fri 07:58</p>
+<h2 class="author">vanangamudi</h2><p class="date">Created: 2025-05-30 Fri 18:12</p>
 </section>
 <section id="sec-table-of-contents"><div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#/slide-org13f2c45">1. How a neural network works?</a></li>
-<li><a href="#/slide-org9b1195f">2. Activities</a>
+<li><a href="#/slide-orgd4998a4">1. How a neural network works?</a>
 <ul>
-<li><a href="#/slide-orgddaff0f">2.1. First experiment</a></li>
-<li><a href="#/slide-org1aae964">2.2. Recommend a number based on binned tabled (histogram)</a></li>
-<li><a href="#/slide-org4e079e0">2.3. Multiply and Sum</a></li>
-<li><a href="#/slide-orgc484b02">2.4. Multiply and Sum + Activation</a></li>
+<li><a href="#/slide-orgc379c9a">1.1. Input Features ::</a></li>
+<li><a href="#/slide-org0d5e165">1.2. Network Structure</a></li>
 </ul>
 </li>
-<li><a href="#/slide-org1f556c5">3. A network of specialists</a>
+<li><a href="#/slide-org560cb7f">2. Activities</a>
 <ul>
-<li><a href="#/slide-org0a81914">3.1. Observations(Dataset )</a></li>
-<li><a href="#/slide-orgb0d082f">3.2. Raw and Scaled Dataset (Max-based Scaling)</a></li>
-<li><a href="#/slide-org970dae5">3.3. First simulation</a></li>
-<li><a href="#/slide-org104f0a0">3.4. Second simulation</a></li>
-<li><a href="#/slide-org6cb78bc">3.5. Third simulation</a></li>
+<li><a href="#/slide-org038c1d5">2.1. First experiment</a></li>
+<li><a href="#/slide-org12acb6e">2.2. Recommend a number based on binned tabled (histogram)</a></li>
+<li><a href="#/slide-org9353b05">2.3. Multiply and Sum</a></li>
+<li><a href="#/slide-org4d27234">2.4. Multiply and Sum + Activation</a></li>
 </ul>
 </li>
-<li><a href="#/slide-org3124715">4. Activation plots</a>
+<li><a href="#/slide-orgd7b9eb3">3. A Network of Specialists</a>
 <ul>
-<li><a href="#/slide-org2bd90ef">4.1. Lifestyle</a></li>
-<li><a href="#/slide-orge8f270f">4.2. Market heatmap</a></li>
-<li><a href="#/slide-orga1ecc62">4.3. Market 3d plot</a></li>
+<li><a href="#/slide-org9f82363">3.1. Observations(Dataset )</a></li>
+<li><a href="#/slide-org12a9ac2">3.2. Raw and Scaled Dataset (Max-based Scaling)</a></li>
+<li><a href="#/slide-org44806b2">3.3. First simulation</a>
+<ul>
+<li><a href="#/slide-org93ee27a">3.3.1. What if we draw the network?</a></li>
 </ul>
 </li>
-<li><a href="#/slide-org1582a7f">5. Interpretability</a></li>
+<li><a href="#/slide-org457cfbc">3.4. Second simulation</a>
+<ul>
+<li><a href="#/slide-org42be7c5">3.4.1. What if we draw the network?</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org4573b92">3.5. Third simulation</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org9d54429">4. Activation plots</a>
+<ul>
+<li><a href="#/slide-orgf9655e7">4.1. Lifestyle - backward slanting straight line</a></li>
+<li><a href="#/slide-org6d29a47">4.2. Lifestyle - positively skewed curve</a></li>
+<li><a href="#/slide-org9c6f0bb">4.3. Market heatmap</a></li>
+<li><a href="#/slide-org8129b6a">4.4. Market 3d plot</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org81370e3">5. What have we learned (1)</a></li>
+<li><a href="#/slide-org67632e0">6. What have we learned (2)</a></li>
+<li><a href="#/slide-orgff274be">7. What have we learned (3)</a></li>
+<li><a href="#/slide-org61c84c5">8. What if we can have a better? (1)</a></li>
+<li><a href="#/slide-orgb6ac082">9. What if we can do even better? (2)</a></li>
+<li><a href="#/slide-org3568a0f">10. Enter KAN</a></li>
+<li><a href="#/slide-orgfc26be5">11. What is KAN?</a></li>
+<li><a href="#/slide-org98987d2">12. Interpretability</a></li>
 </ul>
 </div>
 </div>
 </section>
 
+
 <section>
-<section id="slide-org13f2c45">
-<h2 id="org13f2c45"><span class="section-number-2">1.</span> How a neural network works?</h2>
+<section id="slide-orgd4998a4">
+<h2 id="orgd4998a4"><span class="section-number-2">1.</span> How a neural network works?</h2>
 <ul>
 <li>Let have volunteers act as neurons and simulate how a neural network works</li>
 
@@ -78,17 +100,18 @@
 <p>
 The problem for the volunteer network to model is price prediction for houses
 </p>
-<dl>
-<dt>Input Features</dt><dd><ul>
+</section>
+</section>
+<section>
+<section id="slide-orgc379c9a">
+<h3 id="orgc379c9a"><span class="section-number-3">1.1.</span> Input Features ::</h3>
+<ul>
 <li>House size</li>
 <li>Centrality</li>
 <li>Crime rate</li>
 <li>Price trend</li>
 
-</ul></dd>
-
-</dl>
-
+</ul>
 
 <p>
 Dataset
@@ -159,9 +182,12 @@ Dataset
 </tbody>
 </table>
 
-
-<dl>
-<dt>Network size</dt><dd><ul>
+</section>
+</section>
+<section>
+<section id="slide-org0d5e165">
+<h3 id="org0d5e165"><span class="section-number-3">1.2.</span> Network Structure</h3>
+<ul>
 <li>input = 3</li>
 <li>hidden = 4
 Each specialist scores based on particular features and give a score
@@ -178,21 +204,19 @@ Each specialist scores based on particular features and give a score
 
 </ul></li>
 
-</ul></dd>
-
-</dl>
+</ul>
 </section>
 </section>
 <section>
-<section id="slide-org9b1195f">
-<h2 id="org9b1195f"><span class="section-number-2">2.</span> Activities</h2>
+<section id="slide-org560cb7f">
+<h2 id="org560cb7f"><span class="section-number-2">2.</span> Activities</h2>
 <div class="outline-text-2" id="text-2">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-orgddaff0f">
-<h3 id="orgddaff0f"><span class="section-number-3">2.1.</span> First experiment</h3>
+<section id="slide-org038c1d5">
+<h3 id="org038c1d5"><span class="section-number-3">2.1.</span> First experiment</h3>
 <p>
 Verbal assessment based on best guesses.
 </p>
@@ -200,8 +224,8 @@ Verbal assessment based on best guesses.
 </section>
 </section>
 <section>
-<section id="slide-org1aae964">
-<h3 id="org1aae964"><span class="section-number-3">2.2.</span> Recommend a number based on binned tabled (histogram)</h3>
+<section id="slide-org12acb6e">
+<h3 id="org12acb6e"><span class="section-number-3">2.2.</span> Recommend a number based on binned tabled (histogram)</h3>
 <p>
 Each volunteer is given a sheet of paper of instruction on what score value to shout out in a tabular form.
 </p>
@@ -256,8 +280,8 @@ For example for centrality feature, the following tables means highly accessible
 </section>
 </section>
 <section>
-<section id="slide-org4e079e0">
-<h3 id="org4e079e0"><span class="section-number-3">2.3.</span> Multiply and Sum</h3>
+<section id="slide-org9353b05">
+<h3 id="org9353b05"><span class="section-number-3">2.3.</span> Multiply and Sum</h3>
 <p>
 Lifestyle and market analysts now consider more than one factor
 </p>
@@ -270,8 +294,8 @@ Lifestyle and market analysts now consider more than one factor
 </section>
 </section>
 <section>
-<section id="slide-orgc484b02">
-<h3 id="orgc484b02"><span class="section-number-3">2.4.</span> Multiply and Sum + Activation</h3>
+<section id="slide-org4d27234">
+<h3 id="org4d27234"><span class="section-number-3">2.4.</span> Multiply and Sum + Activation</h3>
 <p>
 Lets add activation functions.
 Activation function for
@@ -306,16 +330,16 @@ Each specialist scores based on particular features and give a score
 </section>
 </section>
 <section>
-<section id="slide-org1f556c5">
-<h2 id="org1f556c5"><span class="section-number-2">3.</span> A network of specialists</h2>
+<section id="slide-orgd7b9eb3">
+<h2 id="orgd7b9eb3"><span class="section-number-2">3.</span> A Network of Specialists</h2>
 <div class="outline-text-2" id="text-3">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org0a81914">
-<h3 id="org0a81914"><span class="section-number-3">3.1.</span> Observations(Dataset )</h3>
-<table id="orgd3f9c01" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<section id="slide-org9f82363">
+<h3 id="org9f82363"><span class="section-number-3">3.1.</span> Observations(Dataset )</h3>
+<table id="org73cdde2" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
@@ -383,9 +407,9 @@ Each specialist scores based on particular features and give a score
 </section>
 </section>
 <section>
-<section id="slide-orgb0d082f">
-<h3 id="orgb0d082f"><span class="section-number-3">3.2.</span> Raw and Scaled Dataset (Max-based Scaling)</h3>
-<table id="orgde9f500" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<section id="slide-org12a9ac2">
+<h3 id="org12a9ac2"><span class="section-number-3">3.2.</span> Raw and Scaled Dataset (Max-based Scaling)</h3>
+<table id="org578f8c7" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
@@ -454,12 +478,12 @@ Each specialist scores based on particular features and give a score
 </section>
 </section>
 <section>
-<section id="slide-org970dae5">
-<h3 id="org970dae5"><span class="section-number-3">3.3.</span> First simulation</h3>
+<section id="slide-org44806b2">
+<h3 id="org44806b2"><span class="section-number-3">3.3.</span> First simulation</h3>
 <ul>
 <li>Child Care: \(10 \times (1 - crime)\)</li>
 <li>Engineer: \(50 \times size\)</li>
-<li>Lifestyle: \(5 \times centrality\)</li>
+<li>Lifestyle: \(-5 \times centrality\)</li>
 <li>Market Specialist: \(8 \times trend\)</li>
 
 </ul>
@@ -548,12 +572,23 @@ Each specialist scores based on particular features and give a score
 </section>
 </section>
 <section>
-<section id="slide-org104f0a0">
-<h3 id="org104f0a0"><span class="section-number-3">3.4.</span> Second simulation</h3>
+<section id="slide-org93ee27a">
+<h4 id="org93ee27a"><span class="section-number-4">3.3.1.</span> What if we draw the network?</h4>
+
+<div id="org5304655" class="figure">
+<p><img src="img/first-network.png" alt="first-network.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org457cfbc">
+<h3 id="org457cfbc"><span class="section-number-3">3.4.</span> Second simulation</h3>
 <ul>
 <li>Child Care: \(10 \times (1 - crime)\)</li>
 <li>Engineer: \(50 \times size\)</li>
-<li>Lifestyle: \(5 \times centrality\)</li>
+<li>Lifestyle: \(-5 \times centrality\)</li>
 <li><i>Market Specialist</i>: \(5 \times (1 - crime) + 8 \times trend)\)</li>
 
 </ul>
@@ -642,12 +677,23 @@ Each specialist scores based on particular features and give a score
 </section>
 </section>
 <section>
-<section id="slide-org6cb78bc">
-<h3 id="org6cb78bc"><span class="section-number-3">3.5.</span> Third simulation</h3>
+<section id="slide-org42be7c5">
+<h4 id="org42be7c5"><span class="section-number-4">3.4.1.</span> What if we draw the network?</h4>
+
+<div id="org9496b2c" class="figure">
+<p><img src="img/second-network.png" alt="second-network.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org4573b92">
+<h3 id="org4573b92"><span class="section-number-3">3.5.</span> Third simulation</h3>
 <ul>
 <li>Child Care: \(10 \times (1 - crime)\)</li>
 <li>Engineer: \(50 \times size\)</li>
-<li><i>Lifestyle</i>: \( lognormal (5 \times centrality)\)</li>
+<li><i>Lifestyle</i>: \( lognormal (5 \times centrality)\)  <b>Notice the 5 is not -5 anymore</b></li>
 <li><i>Market Specialist</i>: \(max(50, 5 \times (1 - crime) + 8 \times trend)\)</li>
 
 </ul>
@@ -736,48 +782,139 @@ Each specialist scores based on particular features and give a score
 </section>
 </section>
 <section>
-<section id="slide-org3124715">
-<h2 id="org3124715"><span class="section-number-2">4.</span> Activation plots</h2>
+<section id="slide-org9d54429">
+<h2 id="org9d54429"><span class="section-number-2">4.</span> Activation plots</h2>
 <div class="outline-text-2" id="text-4">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org2bd90ef">
-<h3 id="org2bd90ef"><span class="section-number-3">4.1.</span> Lifestyle</h3>
+<section id="slide-orgf9655e7">
+<h3 id="orgf9655e7"><span class="section-number-3">4.1.</span> Lifestyle - backward slanting straight line</h3>
 
-<div id="org327ab96" class="figure">
-<p><img src="img/lifestyle-activation-function.png" alt="lifestyle-activation-function.png" />
+<div id="org08b7a6a" class="figure">
+<p><img src="img/lifestyle-activation-plot.png" alt="lifestyle-activation-plot.png" />
 </p>
 </div>
 
 </section>
 </section>
 <section>
-<section id="slide-orge8f270f">
-<h3 id="orge8f270f"><span class="section-number-3">4.2.</span> Market heatmap</h3>
+<section id="slide-org6d29a47">
+<h3 id="org6d29a47"><span class="section-number-3">4.2.</span> Lifestyle - positively skewed curve</h3>
 
-<div id="org83bb653" class="figure">
-<p><img src="img/market-activation-function.png" alt="market-activation-function.png" />
+<div id="orgd8e1681" class="figure">
+<p><img src="img/lifestyle-activation2-plot.png" alt="lifestyle-activation2-plot.png" />
+</p>
+</div>
+<aside class="notes">
+<p>
+Note that curvy <code>log-normal</code> activation function is not giving as much as importance to the very busy city centre and the slanting straight line
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-org9c6f0bb">
+<h3 id="org9c6f0bb"><span class="section-number-3">4.3.</span> Market heatmap</h3>
+
+<div id="org5c31e67" class="figure">
+<p><img src="img/market-activation-plot.png" alt="market-activation-plot.png" />
 </p>
 </div>
 
 </section>
 </section>
 <section>
-<section id="slide-orga1ecc62">
-<h3 id="orga1ecc62"><span class="section-number-3">4.3.</span> Market 3d plot</h3>
+<section id="slide-org8129b6a">
+<h3 id="org8129b6a"><span class="section-number-3">4.4.</span> Market 3d plot</h3>
 
-<div id="org2641698" class="figure">
-<p><img src="img/market-activation-function-3d.png" alt="market-activation-function-3d.png" />
+<div id="orgd50b768" class="figure">
+<p><img src="img/market-activation-plot-3d.png" alt="market-activation-plot-3d.png" />
 </p>
 </div>
 
 </section>
 </section>
 <section>
-<section id="slide-org1582a7f">
-<h2 id="org1582a7f"><span class="section-number-2">5.</span> Interpretability</h2>
+<section id="slide-org81370e3">
+<h2 id="org81370e3"><span class="section-number-2">5.</span> What have we learned (1)</h2>
+<ul>
+<li>Each neuron learns a <code>smooth</code> function, specified by the <code>weights</code> and the <code>activation function</code></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org67632e0">
+<h2 id="org67632e0"><span class="section-number-2">6.</span> What have we learned (2)</h2>
+<ul>
+<li>The <code>input</code> is multiplied by <code>weight of the connection</code> determines the influence on the output</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgff274be">
+<h2 id="orgff274be"><span class="section-number-2">7.</span> What have we learned (3)</h2>
+<ul>
+<li>But in the end <code>activation function</code> is the one that decides
+<ul>
+<li><i>Lifestyle</i>: \( lognormal (5 \times centrality)\)</li>
+<li>Eventhough the input is amplified by this multiplication the activation function is the one decides larger value means the house is too remote to be accessible
+<img src="img/lifestyle-activation-plot.png" alt="lifestyle-activation-plot.png" /></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org61c84c5">
+<h2 id="org61c84c5"><span class="section-number-2">8.</span> What if we can have a better? (1)</h2>
+<ul>
+<li>more sophisticated squiggly activation function?
+<img src="img/bernstein.png" alt="bernstein.png" /></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb6ac082">
+<h2 id="orgb6ac082"><span class="section-number-2">9.</span> What if we can do even better? (2)</h2>
+<ul>
+<li>Combine the curves into complex shapes
+<img src="img/bspline.png" alt="bspline.png" /></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org3568a0f">
+<h2 id="org3568a0f"><span class="section-number-2">10.</span> Enter KAN</h2>
+
+<div id="orgc4eeaef" class="figure">
+<p><img src="img/title-image.png" alt="title-image.png" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgfc26be5">
+<h2 id="orgfc26be5"><span class="section-number-2">11.</span> What is KAN?</h2>
+<p>
+What if the activation is moved onto the dendrites in the network instead of neurons.
+<img src="img/mlp-kan-comparison.png" alt="mlp-kan-comparison.png" />
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org98987d2">
+<h2 id="org98987d2"><span class="section-number-2">12.</span> Interpretability</h2>
 <p>
 <a href="https://github.com/KindXiaoming/pykan/blob/master/tutorials/Interp/Interp_1_Hello%2C%20MultKAN.ipynb">https://github.com/KindXiaoming/pykan/blob/master/tutorials/Interp/Interp_1_Hello%2C%20MultKAN.ipynb</a>
 </p>
@@ -791,13 +928,11 @@ Each specialist scores based on particular features and give a score
 // Full list of configuration options available here:
 // https://github.com/hakimel/reveal.js#configuration
 Reveal.initialize({
+width:1200, height:800, margin: 0.1, minScale:0.2, maxScale:2.5, transition:'edges',
 
 // Optional libraries used to extend on reveal.js
 dependencies: [
- { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
- { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }]
 
 });
 
